@@ -23,6 +23,16 @@ data "aws_subnets" "default" {
   }
 }
 
+data "terraform_remote_state" "db" {
+  backend = "s3"
+
+  config = {
+    bucket = "riccardo-la-torre-tf-state"
+    key = "stage/data-stores/mysql/terraform.tfstate"
+    region = "us-east-2"
+  }
+}
+
 variable "server_port" {
   description = "The port the server will use for HTTP requests"
   type = number
@@ -41,6 +51,8 @@ resource "aws_launch_configuration" "example" {
   user_data = <<-EOF
               #!/bin/bash
               echo "Hello, World" > index.html
+              echo "${data.terraform_remote_state.db.outputs.address}" >> index.html
+              echo "${data.terraform_remote_state.db.outputs.port}" >> index.html
               nohup busybox httpd -f -p ${var.server_port} &
               EOF
   lifecycle {
