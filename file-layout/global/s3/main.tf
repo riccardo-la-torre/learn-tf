@@ -2,15 +2,15 @@ provider "aws" {
     region = "us-east-2"
 }
 
-terraform {
-  backend "s3" {
-    bucket = "riccardo-la-torre-tf-state"
-    key = "global/s3/terraform.tfstate"
-    region = "us-east-2"
-    dynamodb_table = "tf-locks"
-    encrypt = true
-  }
-}
+# terraform {
+#   backend "s3" {
+#     bucket = "riccardo-la-torre-tf-state"
+#     key = "global/s3/terraform.tfstate"
+#     region = "us-east-2"
+#     dynamodb_table = "tf-locks"
+#     encrypt = true
+#   }
+# }
 
 resource "aws_s3_bucket" "terraform_state" {
     bucket = "riccardo-la-torre-tf-state"

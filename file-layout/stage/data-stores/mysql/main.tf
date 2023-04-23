@@ -18,8 +18,11 @@ resource "aws_db_instance" "example" {
     allocated_storage = 10
     instance_class = "db.t2.micro"
     name = "example_database"
+    apply_immediately = true
+    backup_retention_period = 0
+    skip_final_snapshot = true
     username = "admin"
-    password = data.aws_secretsmanager_secret_version.db_password.secret_string
+    password = jsondecode(data.aws_secretsmanager_secret_version.db_password.secret_string)["mysql-master-password-stage"]
 }
 
 data "aws_secretsmanager_secret_version" "db_password" {
